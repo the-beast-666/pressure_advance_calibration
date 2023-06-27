@@ -1,4 +1,3 @@
-
 FILAMENT_NAME = "pla"
 BUILD_PLATE_TEMPERATURE = 50
 HOTEND_TEMPERATURE = 200
@@ -10,10 +9,10 @@ FILAMENT_DIAMETER = 1.75
 NOZZLE_DIAMETER = .6
 LINE_WIDTH = 0.8 # May need adjustment. 
 
-number_off_test = 10
+number_off_test = 20
 test_increment = .01
-PA_START_VALUE = 0
-PA_STOP_VALUE = number_off_test * test_increment
+PA_START_VALUE = 0.03
+PA_STOP_VALUE = (number_off_test * test_increment)+PA_START_VALUE
 start_x = 50
 start_y = 50
 line_length = 30
@@ -22,10 +21,10 @@ spacing = 4
 
 
 
-bounding_box_height = (number_off_test+1) * spacing
-EXTRUSION_DISTANCE_PER_MM = ((1*LAYER_HEIGHT*LINE_WIDTH)/((3.1416*(FILAMENT_DIAMETER**2))/4))*.09
+bounding_box_height = (number_off_test+2) * spacing
+EXTRUSION_DISTANCE_PER_MM = ((1*LAYER_HEIGHT*LINE_WIDTH)/((3.1416*(FILAMENT_DIAMETER**2))/4))
 FINISHED_X = 0
-FINISHED_Y = bounding_box_height + 20
+FINISHED_Y = bounding_box_height + start_y
 #print(';EXTRUSION DISTANCE '+ str(EXTRUSION_DISTANCE_PER_MM))
 #print(';bounding box height '+ str(bounding_box_height))
 
@@ -57,22 +56,22 @@ f.write(
         "G92 E0 ;""\n"
         "M106 S0 ; set fan speed to 0""\n"
 
-        "G1 X" + str(start_x + line_length + LINE_WIDTH) + " Y" + str(start_y - spacing - LINE_WIDTH) + " F30000 ; move to start position""\n"
+        "G1 X" + str(start_x + line_length + LINE_WIDTH*2) + " Y" + str(start_y - spacing - LINE_WIDTH*2) + " F30000 ; move to start position""\n"
         "G1 Z" + str(LAYER_HEIGHT) + " F300 ; move to layer height""\n"
         "G91 ; switch to relative movements""\n"
     
         "; Print a bounding box to aid with removal and prime the extruder.""\n"
-        "G1 E" + str(RETRACTION_DISTANCE * 2) + "\n"
-        "G1 y" + str(bounding_box_height + LINE_WIDTH) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 ' "\n"
-        "G1 x-" + str(line_length + LINE_WIDTH) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
-        "G1 y-" + str(bounding_box_height + LINE_WIDTH) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
-        "G1 x" + str(line_length + LINE_WIDTH) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
+        "G1 E" + str(RETRACTION_DISTANCE) + "\n"
+        "G1 Y" + str(bounding_box_height + LINE_WIDTH*2) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 ' "\n"
+        "G1 X-" + str(line_length + LINE_WIDTH*2) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
+        "G1 Y-" + str(bounding_box_height + LINE_WIDTH*2) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
+        "G1 X" + str(line_length + LINE_WIDTH*2) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
         "G1 X" + str(-LINE_WIDTH) + " Y" + str(LINE_WIDTH) + "\n"
         "; second bounding box loop""\n"
-        "G1" + " y" + str(bounding_box_height) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
-        "G1" + " x" + str(-line_length) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
-        "G1" + " y" + str(-bounding_box_height) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
-        "G1 x" + str(line_length) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
+        "G1 Y" + str(bounding_box_height) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
+        "G1 X" + str(-line_length) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
+        "G1 Y" + str(-bounding_box_height) + ' E' + str((bounding_box_height) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
+        "G1 X" + str(line_length) + ' E' + str((line_length) * EXTRUSION_DISTANCE_PER_MM) + ' F3000 '"\n"
 
         "G1 Z" + str(Z_HOP_HEIGHT) + " E" + str(-RETRACTION_DISTANCE) + " F300; retract and prepare to hop to first line location."
         "\n"  
@@ -104,7 +103,8 @@ M140 S0 ; turn off heatbed
 M107 ; turn off fan
 '''
 "G1 Z" + str(Z_HOP_HEIGHT*2) + " E" + str(-RETRACTION_DISTANCE*1.5) + " F300; retract and get over the line.""\n"
-'G1 X-' + str(FINISHED_X) + ' Y' + str(FINISHED_Y) + ' F30000        ; move to end position'
+"G90 ; Absolute XYZ""\n"
+'G1 X5 Y' + str(FINISHED_Y) + ' F30000        ; move to end position'
 '''
 M84 ; disable motors
 '''

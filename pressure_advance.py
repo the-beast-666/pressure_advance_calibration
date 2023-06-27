@@ -10,23 +10,23 @@ NOZZLE_DIAMETER = .6
 LINE_WIDTH = 0.8 # May need adjustment. 
 
 number_off_test = 20
-test_increment = .01
+test_increment = .05
 PA_START_VALUE = 0.03
 PA_STOP_VALUE = (number_off_test * test_increment)+PA_START_VALUE
 start_x = 50
 start_y = 50
 line_length = 30
-spacing = 4
+spacing = 3
 
 
 
 
-bounding_box_height = (number_off_test+2) * spacing
+bounding_box_height = (number_off_test+1) * spacing
 EXTRUSION_DISTANCE_PER_MM = ((1*LAYER_HEIGHT*LINE_WIDTH)/((3.1416*(FILAMENT_DIAMETER**2))/4))
 FINISHED_X = 0
 FINISHED_Y = bounding_box_height + start_y
-#print(';EXTRUSION DISTANCE '+ str(EXTRUSION_DISTANCE_PER_MM))
-#print(';bounding box height '+ str(bounding_box_height))
+print(';EXTRUSION DISTANCE '+ str(EXTRUSION_DISTANCE_PER_MM))
+print(';bounding box height '+ str(bounding_box_height))
 
 f = open("PA_CALIBRATION_"+ FILAMENT_NAME + ".gcode" , "w")
 
@@ -89,12 +89,12 @@ while PA_START_VALUE < PA_STOP_VALUE :
                 'G1 Z' + str(-Z_HOP_HEIGHT) + ' F300           ; move to layer height'"\n"
                 'G1 E' + str(RETRACTION_DISTANCE) + ' F1800           ; un-retract'"\n"
                 'G1 X' + str(line_length / 4) + ' E' + str((line_length / 4) * EXTRUSION_DISTANCE_PER_MM) + ' F300     ; print line part one'"\n"
-                'G1 X' + str( line_length / 2) + ' E' + str((line_length / 2) * EXTRUSION_DISTANCE_PER_MM) + ' F9000    ; print line part two'"\n"
+                'G1 X' + str( line_length / 2) + ' E' + str((line_length / 2) * EXTRUSION_DISTANCE_PER_MM) + ' F4000    ; print line part two'"\n"
                 'G1 X' + str(line_length / 4) + ' E' + str((line_length / 4) * EXTRUSION_DISTANCE_PER_MM) + ' F300     ; print line part three'"\n"
                 'G1 E' + str(-RETRACTION_DISTANCE) + ' F1800          ; retract'"\n"
                 'G1 Z' + str(Z_HOP_HEIGHT) + ' F300            ; Move above layer height' "\n"
         )
-        PA_START_VALUE = PA_START_VALUE + .01
+        PA_START_VALUE = PA_START_VALUE + test_increment
 
 f.write('''
 G4 ; wait

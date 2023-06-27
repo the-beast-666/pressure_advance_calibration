@@ -1,17 +1,21 @@
+
 FILAMENT_NAME = "pla"
 BUILD_PLATE_TEMPERATURE = 50
 HOTEND_TEMPERATURE = 200
 
-Z_HOP_HEIGHT = 0.75
-LAYER_HEIGHT = 0.26
-RETRACTION_DISTANCE = 1
 FILAMENT_DIAMETER = 1.75
 NOZZLE_DIAMETER = .6
+Z_HOP_HEIGHT = 0.75
+LAYER_HEIGHT = NOZZLE_DIAMETER*.75
+RETRACTION_DISTANCE = 1
+
 LINE_WIDTH = 0.8 # May need adjustment. 
 
-number_off_test = 20
-test_increment = .05
-PA_START_VALUE = 0.03
+print('enter number of test :')
+number_off_test = int(input())
+print('enter test increment value :')
+test_increment = float(input())
+PA_START_VALUE = test_increment
 PA_STOP_VALUE = (number_off_test * test_increment)+PA_START_VALUE
 start_x = 50
 start_y = 50
